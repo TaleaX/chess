@@ -62,20 +62,41 @@ void    print_board(field **board)
     puts("");
     while (row < 8)
     {
-        printf("\n\t---------------------------------\n");
+        if (row == 0)
+        {
+            printf("\t\t\t\t  Y\n");
+            printf("\t\t\t\t  ^\n");
+            printf("\t\t\t\t  |");
+        }
+        printf("\n\t\t\t\t  ---------------------------------     \n");
         col = 0;
-        printf("\t|");
+        printf("\t\t\t\t%d |", row);
         while(col < 8)
         {
             if (!board[row][col].empty)
-                printf(" %c |", board[row][col].fig.name);
+            {
+                if (board[row][col].fig.color == 1)
+                    printf(" %c ", board[row][col].fig.name);
+                else if (board[row][col].fig.color == 0)
+                    printf(MAGENTA " %c " COLOR_RESET, board[row][col].fig.name);
+                printf("|");
+            }
             else
                 printf("   |");
+            /*if (row == 7)
+            {
+                if (col == 7)
+                {
+                    printf("\n");
+                    printf("\t  |");
+                }
+                printf("  %d ", col);
+            }*/
             col++;
         }
         col = 0;
         printf("\n");
-        printf("\t|");
+        printf("\t\t\t\t  |");
         while(col < 8)
         {
             printf("   |");
@@ -83,7 +104,14 @@ void    print_board(field **board)
         }
         row++;
     }
-    printf("\n\t---------------------------------\n");
+    printf("\n\t\t\t\t  -----------------------------------> X\n");
+    col = 0;
+    printf("\t\t\t\t  ");
+    while (col < 8)
+    {
+        printf("  %d ", col);
+        col++;
+    }
     puts("");
 }
 
@@ -114,7 +142,7 @@ void print_menu()
                 printf("| Single Player > 1 |");
                 j += 21;
             }
-            else if (i == 7 && j == 51)
+            else if (i == 7 && j == 52)
             {
                 printf("| Double Player > 2 |");
                 j += 21;

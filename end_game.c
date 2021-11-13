@@ -1,12 +1,11 @@
 #include <stdlib.h>
-#include <unistd.h>
 #include <stdio.h>
 #include "headers/basis.h"
-#include "headers/rules.h"
-#include "headers/rules.h"
+#include "headers/game.h"
 
 int check(field **board, field *current, field *king)
 {
+    //printf("current check = %c\n", current->fig.name);
     if (is_valid_move(board, current, king))
         return (1);
     return (0);
@@ -95,7 +94,7 @@ int checkmate(field **board, field *current, field *king, int player_color)
                 {
                     if (is_valid_move(board, &board[i][j], current))
                     {
-                        printf("fig name = %c\n", board[i][j].fig.name);
+                        //printf("fig name = %c\n", board[i][j].fig.name);
                         return (0);
                     }
                     if (check(board, &board[i][j], king_neighbours))
@@ -113,7 +112,7 @@ int checkmate(field **board, field *current, field *king, int player_color)
         king_neighbours++;
     }
     free(king_neighbours);
-    printf("max = %d, counter = %d", max_possible_pos, counter);
+    //printf("max = %d, counter = %d", max_possible_pos, counter);
     if (counter == max_possible_pos)
         return (1);
     return (0);

@@ -2,6 +2,11 @@
 #define RULES_H
 #include "basis.h"
 
-int     is_valid_move(field **board, field *current, field *next);
+int     check_rock(field **board, field *current, field *next);
+int     check_knight(field **board, field *current, field *next);
+int     check_bishop(field **board, field *current, field *next);
+int     check_queen(field **board, field *current, field *next);
+int     check_king(field **board, field *current, field *next);
+int     check_pawn(field *current, field *next);
 
 #endif
