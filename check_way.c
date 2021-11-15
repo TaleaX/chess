@@ -10,7 +10,10 @@ int row_is_free(field **board, int row, int start, int end)
     while (start != end)
     {
         if (!board[row][start].empty)
+        {
+            printf("not empty: name: %c, x = %d, y = %d , empty = %d\n",board[row][start].fig.name ,board[row][start].x, board[row][start].y, board[row][start].empty);
             return (0);
+        }
         if (start > end)
             start--;
         if (start < end)

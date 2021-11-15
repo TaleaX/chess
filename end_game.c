@@ -3,117 +3,120 @@
 #include "headers/basis.h"
 #include "headers/game.h"
 
-int check(field **board, field *current, field *king)
+int check(field **board, field *king)
 {
-    //printf("current check = %c\n", current->fig.name);
-    if (is_valid_move(board, current, king))
-        return (1);
-    return (0);
-}
+    int i;
+    int j;
 
-field   *opponent_king_neighbours(field **board, int player_color)
-{
-    int     i;
-    int     j;
-    int     n;
-    int     found_king;
-    field   *king_neighbours;
-    field   *ret;
-
-    king_neighbours = (field *)malloc(sizeof(field) * 10);
-    ret = king_neighbours;
     i = 0;
-    n = 0;
-    found_king = 0;
-    while (i < 8)
+    while(i < ROW)
     {
         j = 0;
-        while (j < 8)
+        while (j < COL)
         {
-            if (board[i][j].fig.name == 'K' && board[i][j].fig.color != player_color)
+            if (board[i][j].fig.name == 'R')
+                printf("x = %d, y = %d, empty? = %d\n", board[0][3].x, board[0][3].y, board[0][3].empty);
+            if (is_valid_move(board, &board[i][j], king))
             {
-                found_king = 1;
-                while (n < 9)
-                {
-                    if (((i - 1) < 0 && (n == 0 || n == 1 || n == 2))
-                        || ((i + 1 > 7) && (n == 6 || n == 7 || n == 8))
-                        || j + (n % 3 - 1) > 7 || j + (n % 3 - 1) < 0)
-                    {
-                        n++;
-                        continue ;
-                    }
-                    if (n == 0 || n == 1 || n == 2)
-                        *king_neighbours = board[i - 1][j + (n % 3 - 1)];
-                    else if(n == 3 || n == 4 || n == 5)
-                        *king_neighbours = board[i][j + (n % 3 - 1)];
-                    else
-                        *king_neighbours = board[i + 1][j + (n % 3 - 1)];
-                    king_neighbours++;
-                    n++;
-                }
-                break;
+                printf("check valid move: x = %d, y = %d\n", board[i][j].x, board[i][j].y);
+                return (1);
             }
             j++;
         }
-        if (found_king)
-            break;
         i++;
     }
-    king_neighbours->empty = -1;
+    return (0);
+}
+
+field   *get_other_players_figs(field **board, int other_player_color)
+{
+    field   *figs;
+    field   *ret;
+    int     i;
+    int     j;
+    int     found;
+    int     m;
+
+    figs = (field *)malloc(sizeof(field) * 17);
+    ret = figs;
+    i = 0;
+    m = 0;
+    printf("in here\n");
+    found = 0;
+    while (i < ROW)
+    {
+        j = 0;
+        while (j < COL)
+        {
+            if (board[i][j].fig.color == other_player_color)
+            {
+                found += 1;
+                *figs = board[i][j];
+                figs++;
+            }
+            j++;
+        }
+        i++;
+    }
+    printf("m = %d\n", m);
+    printf("found = %d\n", found);
+    figs->empty = -1;
+    printf("in here3\n");
     return (ret);
 }
 
-int checkmate(field **board, field *current, field *king, int player_color)
+int checkmate(field **board, field *king, int other_player_color)
 {
     int     i;
     int     j;
+    int     k;
+    int     m;
     int     counter;
     int     check_;
     int     max_possible_pos;
     field   *king_neighbours;
+    field   *players_figs;
+    field   *c;
     figure  temp_fig;
 
-    king_neighbours = opponent_king_neighbours(board, player_color);
     i = 0;
     counter = 0;
     max_possible_pos = 0;
     check_ = 0;
-    while (king_neighbours->empty != -1)
+    m = 0;
+    printf("in here\n");
+    players_figs = get_other_players_figs(board, other_player_color);
+    printf("king x %d, y %d\n", king->x, king->y);
+    while (players_figs->empty != -1)
     {
-        check_ = 0;
-        if (is_valid_move(board, king, king_neighbours))
+        counter++;
+        i = 0;
+        while (i < ROW)
         {
-            max_possible_pos++;
-            temp_fig = king_neighbours->fig;
-            king_neighbours->fig = king->fig;
-            i = 0;
-            while (i < 8)
+            j = 0;
+            while (j < COL)
             {
-                j = 0;
-                while (j < 8)
+                printf("current: name = %c, x = %d, y = %d\nnext: name = %c, x = %d, y = %d\n\n", players_figs->fig.name, players_figs->x, players_figs->y, board[i][j].fig.name, board[i][j].x, board[i][j].y);
+                if (is_valid_move(board, players_figs, &board[i][j]))
                 {
-                    if (is_valid_move(board, &board[i][j], current))
+                    printf("valid move: name = %c, x = %d, y = %d\n", board[i][j].fig.name, board[i][j].x, board[i][j].y);
+                }
+                if (is_valid_move(board, players_figs, &board[i][j]))
+                {
+                    c = get_field(board, players_figs->x, players_figs->y);
+                    if (next_not_in_check(board, c, &board[i][j], king))
                     {
-                        //printf("fig name = %c\n", board[i][j].fig.name);
+                        free(players_figs);
                         return (0);
                     }
-                    if (check(board, &board[i][j], king_neighbours))
-                    {
-                        if (!check_)
-                            counter++;
-                        check_ = 1;
-                    }
-                    j++;
                 }
-                i++;
+                j++;
             }
-            king_neighbours->fig = temp_fig;
+            i++;
         }
-        king_neighbours++;
+        players_figs++;
     }
-    free(king_neighbours);
-    //printf("max = %d, counter = %d", max_possible_pos, counter);
-    if (counter == max_possible_pos)
-        return (1);
-    return (0);
+    free(players_figs);
+    printf("counter %d\n", counter);
+    return (1);
 }

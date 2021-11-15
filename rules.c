@@ -1,11 +1,13 @@
 #include <stdio.h>
 #include "headers/basis.h"
 #include "headers/check_way.h"
+#include "headers/end_game.h"
 
 
 
 int     check_rock(field **board, field *current, field *next)
 {
+    printf("in Rock rules\n");
     if (next->x != current->x && next->y != current->y)
         return (0);
     if (next->x != current->x)
@@ -45,6 +47,8 @@ int     check_queen(field **board, field *current, field *next)
 
 int     check_king(field **board, field *current, field *next)
 {
+    figure  temp;
+
     if (ABS((next->x - current->x)) > 1 || ABS((next->y - current->y)) > 1)
         return (0);
     return (1);
