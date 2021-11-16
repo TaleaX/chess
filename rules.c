@@ -7,7 +7,6 @@
 
 int     check_rock(field **board, field *current, field *next)
 {
-    printf("in Rock rules\n");
     if (next->x != current->x && next->y != current->y)
         return (0);
     if (next->x != current->x)

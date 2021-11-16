@@ -14,11 +14,9 @@ int check(field **board, field *king)
         j = 0;
         while (j < COL)
         {
-            if (board[i][j].fig.name == 'R')
-                printf("x = %d, y = %d, empty? = %d\n", board[0][3].x, board[0][3].y, board[0][3].empty);
             if (is_valid_move(board, &board[i][j], king))
             {
-                printf("check valid move: x = %d, y = %d\n", board[i][j].x, board[i][j].y);
+                //printf("check valid move: x = %d, y = %d\n", board[i][j].x, board[i][j].y);
                 return (1);
             }
             j++;
@@ -58,10 +56,7 @@ field   *get_other_players_figs(field **board, int other_player_color)
         }
         i++;
     }
-    printf("m = %d\n", m);
-    printf("found = %d\n", found);
     figs->empty = -1;
-    printf("in here3\n");
     return (ret);
 }
 
@@ -76,7 +71,7 @@ int checkmate(field **board, field *king, int other_player_color)
     int     max_possible_pos;
     field   *king_neighbours;
     field   *players_figs;
-    field   *c;
+    field   *current;
     figure  temp_fig;
 
     i = 0;
@@ -96,15 +91,15 @@ int checkmate(field **board, field *king, int other_player_color)
             j = 0;
             while (j < COL)
             {
-                printf("current: name = %c, x = %d, y = %d\nnext: name = %c, x = %d, y = %d\n\n", players_figs->fig.name, players_figs->x, players_figs->y, board[i][j].fig.name, board[i][j].x, board[i][j].y);
+                //printf("current: name = %c, x = %d, y = %d\nnext: name = %c, x = %d, y = %d\n\n", players_figs->fig.name, players_figs->x, players_figs->y, board[i][j].fig.name, board[i][j].x, board[i][j].y);
                 if (is_valid_move(board, players_figs, &board[i][j]))
                 {
-                    printf("valid move: name = %c, x = %d, y = %d\n", board[i][j].fig.name, board[i][j].x, board[i][j].y);
+                    //printf("valid move: name = %c, x = %d, y = %d\n", board[i][j].fig.name, board[i][j].x, board[i][j].y);
                 }
                 if (is_valid_move(board, players_figs, &board[i][j]))
                 {
-                    c = get_field(board, players_figs->x, players_figs->y);
-                    if (next_not_in_check(board, c, &board[i][j], king))
+                    current = get_field(board, players_figs->x, players_figs->y);
+                    if (next_not_in_check(board, current, &board[i][j], king))
                     {
                         free(players_figs);
                         return (0);

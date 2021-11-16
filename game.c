@@ -88,10 +88,6 @@ int is_valid_move(field **board, field *current, field *next)
     int     valid;
 
     valid = 0;
-    if (current->fig.name == 'R' && next->fig.name == 'K')
-    {
-        printf("cR x = %d, y = %d, empty = %d, nK x = %d, y = %d, empty = %d\n", current->x, current->y, current->empty, next->x, next->y, next->empty);
-    }
     if(current->fig.color == next->fig.color)
         return (0);
     if (current->x == next->x && current->y == next->y)
@@ -146,18 +142,18 @@ int next_not_in_check(field **board, field *current, field *next, field *current
     current->fig = empty;
     current->empty = 1;*/
     //checks if current == current king and returns 0 if king stands in check after he has moved to the desired position
-    printf("current fig name %c, current fig x %d, current fig y %d, next name %c, next x %d, next y %d\n", current->fig.name, current->x, current->y, next->fig.name, next->x, next->y);
-    printf("current empty = %d, next empty = %d\n", current->empty, next->empty);
+    //printf("current fig name %c, current fig x %d, current fig y %d, next name %c, next x %d, next y %d\n", current->fig.name, current->x, current->y, next->fig.name, next->x, next->y);
+    //printf("current empty = %d, next empty = %d\n", current->empty, next->empty);
     if (next->fig.name == 'K')
     {
         //board[current->y][current->x].empty = 1;
         //board[current->y][current->x].fig.name = 'X';
-        printf("board: x = %d, y = %d, empyt = %d, name = %c\n", board[0][3].x, board[0][3].y, board[0][3].empty, board[0][3].fig.name);
-        printf("board: x = %d, y = %d, empyt = %d, name = %c\n", board[0][2].x, board[0][2].y, board[0][2].empty, board[0][2].fig.name);
-        printf("board: x = %d, y = %d, empty = %d, name = %c\n", board[0][4].x, board[0][4].y, board[0][4].empty, board[0][4].fig.name);
+        //printf("board: x = %d, y = %d, empyt = %d, name = %c\n", board[0][3].x, board[0][3].y, board[0][3].empty, board[0][3].fig.name);
+        //printf("board: x = %d, y = %d, empyt = %d, name = %c\n", board[0][2].x, board[0][2].y, board[0][2].empty, board[0][2].fig.name);
+        //printf("board: x = %d, y = %d, empty = %d, name = %c\n", board[0][4].x, board[0][4].y, board[0][4].empty, board[0][4].fig.name);
         if (check(board, next))
         {
-            printf("passed check *next");
+            //printf("passed check *next");
             reset(temp_c, temp_n, current, next);
             /*current->fig = temp_c;
             current->empty = 0;
