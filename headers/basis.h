@@ -5,6 +5,7 @@
 # define ROW 8
 # define COL 8
 # define WHITE 1
+# define VALID_CASTLE 2
 # define BOLD "\x1b[1m"
 # define RED "\x1b[31m"
 # define GREEN   "\x1b[32m"

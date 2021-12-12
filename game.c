@@ -1,7 +1,9 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "headers/basis.h"
 #include "headers/rules.h"
 #include "headers/end_game.h"
+#include "headers/check_way.h"
 
 field   *get_field(field **board, int x, int y)
 {
@@ -15,6 +17,26 @@ field   *get_field(field **board, int x, int y)
         while (j < 8)
         {
             if (board[i][j].x == x && board[i][j].y == y)
+                return (&board[i][j]);
+            j++;
+        }
+        i++;
+    }
+    return ((void *)0);
+}
+
+field   *get_current_field(field **board, char fig_name, int player_color)
+{
+    int     i;
+    int     j;
+    
+    i = 0;
+    while (i < 8)
+    {
+        j = 0;
+        while (j < 8)
+        {
+            if (board[i][j].fig.name == fig_name && board[i][j].fig.color == player_color)
                 return (&board[i][j]);
             j++;
         }
@@ -61,6 +83,40 @@ field   *get_current_king(field **board, int player_color)
         i++;
     }
     return ((void *)0);
+}
+
+field   **get_players_figs(field **board, int player_color)
+{
+    field   **figs;
+    field   **ret;
+    int     i;
+    int     j;
+
+    figs = (field **)malloc(sizeof(field *) * 17);
+    ret = figs;
+    i = 0;
+    while (i < 17)
+    {
+        figs[i] = (field *)malloc(sizeof(field));
+        i++;
+    }
+    i = 0;
+    while (i < ROW)
+    {
+        j = 0;
+        while (j < COL)
+        {
+            if (board[i][j].fig.color == player_color)
+            {
+                *figs = &board[i][j];
+                figs++;
+            }
+            j++;
+        }
+        i++;
+    }
+    *figs = (void *)0;
+    return (ret);
 }
 
 void    move(field *current, field *next)
@@ -127,54 +183,79 @@ int is_valid_move(field **board, field *current, field *next)
     return (valid);
 }
 
+void    get_queen(field **board, field *current)
+{
+    char    new_fig;
+
+    if (current->fig.color == BLACK && current->y == 7 && current->fig.name == 'P')
+    {
+        printf("Enter letter of desired figure (capital letter):");
+        fflush(stdout);
+        scanf("%c", &new_fig);
+        current->fig.name = new_fig;
+    }
+    else if (current->fig.color == WHITE && current->y == 0 && current->fig.name == 'P')
+    {
+        printf("Enter letter of desired figure (capital letter):");
+        fflush(stdout);
+        scanf("%c", &new_fig);
+        current->fig.name = new_fig;
+    }
+}
+
 int next_not_in_check(field **board, field *current, field *next, field *current_king)
 {
     field  temp_c;
     field  temp_n;
     
-    printf("current fig name %c, current fig x %d, current fig y %d, next name %c, next x %d, next y %d\n", current->fig.name, current->x, current->y, next->fig.name, next->x, next->y);
     temp_c = *current;
     temp_n = *next;
     move(current, next);
-    /*next->fig.color = current->fig.color;
-    next->fig.name = current->fig.name;
-    next->empty = 0;
-    current->fig = empty;
-    current->empty = 1;*/
-    //checks if current == current king and returns 0 if king stands in check after he has moved to the desired position
-    //printf("current fig name %c, current fig x %d, current fig y %d, next name %c, next x %d, next y %d\n", current->fig.name, current->x, current->y, next->fig.name, next->x, next->y);
-    //printf("current empty = %d, next empty = %d\n", current->empty, next->empty);
     if (next->fig.name == 'K')
     {
-        //board[current->y][current->x].empty = 1;
-        //board[current->y][current->x].fig.name = 'X';
-        //printf("board: x = %d, y = %d, empyt = %d, name = %c\n", board[0][3].x, board[0][3].y, board[0][3].empty, board[0][3].fig.name);
-        //printf("board: x = %d, y = %d, empyt = %d, name = %c\n", board[0][2].x, board[0][2].y, board[0][2].empty, board[0][2].fig.name);
-        //printf("board: x = %d, y = %d, empty = %d, name = %c\n", board[0][4].x, board[0][4].y, board[0][4].empty, board[0][4].fig.name);
         if (check(board, next))
         {
-            //printf("passed check *next");
             reset(temp_c, temp_n, current, next);
-            /*current->fig = temp_c;
-            current->empty = 0;
-            next->fig = temp_n.fig;
-            next->empty = temp_n.empty;*/
             return (0);
         }
     }
     else if (check(board, current_king)) //if current != king, checks if the movement of current figure results in check of your king
     {
         reset(temp_c, temp_n, current, next);
-        /*current->fig = temp_c;
-        current->empty = 0;
-        next->fig = temp_n.fig;
-        next->empty = temp_n.empty;*/
         return (0);
     }
-    /*current->fig = temp_c;
-    current->empty = 0;
-    next->fig = temp_n.fig;
-    next->empty = temp_n.empty;*/
     reset(temp_c, temp_n, current, next);
     return (1);
 }
+
+field   *get_rock(field **board, field *king, field *next)
+{
+    if (king->x < next->x)
+        return (&board[king->y][7]);
+    return (&board[king->y][0]);
+}
+
+int valid_castle(field **board, field *king, field *next)
+{
+    field *rock = get_rock(board, king, next);
+
+    printf("king x = %d, king y = %d\n", king->x, king->y);
+    if (king->fig.name != 'K' || king->fig.moved == 1 || rock->fig.moved == 1)
+    {
+        printf("king or rock moved\n");
+        return (0);
+    }
+    if (ABS((king->x - next->x)) != 2 || king->y != next->y)
+    {
+        printf("next not possible for castle\n");
+        return (0);
+    }   
+    if (!row_is_free(board, king->y, king->x, rock->x))
+    {
+        printf("rock x = %d, king x = %d, king y = %d, row isnt free\n", rock->x, king->x, king->y);
+        return (0);
+    }
+    return (1);
+}
+
+

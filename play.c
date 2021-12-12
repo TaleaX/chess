@@ -8,6 +8,7 @@ int main(void)
 {
     int     player;
     int     player_mode;
+    //char    buf[3];
     field   **board;
 
     player = 1;
@@ -15,6 +16,7 @@ int main(void)
     printf("\nPlayer Mode > ");
     fflush(stdout);
     scanf("%d", &player_mode);
+    //fgets(buf, 2, stdin);
     board = init_board();
     print_board(board);
     if (player_mode == 2)
