@@ -8,18 +8,19 @@ int main(void)
 {
     int     player;
     int     player_mode;
-    //char    buf[3];
+    char    buf[5];
     field   **board;
 
     player = 1;
     print_menu();
     printf("\nPlayer Mode > ");
     fflush(stdout);
-    scanf("%d", &player_mode);
-    //fgets(buf, 2, stdin);
+    //scanf("%d", &player_mode);
+    fgets(buf, 5, stdin);
+    //getchar();
     board = init_board();
     print_board(board);
-    if (player_mode == 2)
+    if (buf[0] == '2')
     {
         player_mode_2(board, player);
     }

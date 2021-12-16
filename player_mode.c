@@ -1,10 +1,71 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "headers/basis.h"
 #include "headers/rules.h"
 #include "headers/init_game.h"
 #include "headers/end_game.h"
 #include "headers/game.h"
+#include "headers/get_fields.h"
+#include "headers/validate.h"
+
+int* parse_inp_arr(char *inp)
+{
+    int *val = (int *)malloc(sizeof(int) * 2);
+    int i = 0;
+    while (*inp && i < 2)
+    {
+        if (*inp >= '0' && *inp <= '7')
+        {
+            val[i] = *inp - '0';
+            i++;
+        }
+        inp++;
+    }
+    if (i < 2)
+        return (NULL);
+    return (val);
+}
+
+node_t  *create_node(field current, field next, int step_counter)
+{
+    node_t  *step = (node_t *)malloc(sizeof(node_t));
+    step->current_field = current;
+    step->next_field = next;
+    step->step_counter = step_counter;
+    step->prev_node = NULL;
+    return (step);
+}
+
+void insert_at_tail(node_t **tail, node_t *node_to_insert)
+{
+    node_to_insert->prev_node = *tail;
+    *tail = node_to_insert;
+}
+
+void remove_node_at_tail(node_t **tail, node_t *node_to_remove)
+{
+    if (*tail == node_to_remove)
+    {
+        *tail = node_to_remove->prev_node;
+        free(node_to_remove);
+    }
+}
+
+void print_nodes(node_t *tail)
+{
+    node_t  *tmp = tail;
+    while (tmp != NULL)
+    {
+        if (tmp->current_field.fig.color)
+            printf(BOLD "Step: %d\nPlayer = 1, moved = %c from x = %d, y = %d to x = %d, y = %d\n" STYLE_RESET,tmp->step_counter, tmp->current_field.fig.name, tmp->current_field.x, tmp->current_field.y, tmp->next_field.x, tmp->next_field.y);
+        else
+        {
+            printf(MAGENTA "Step: %d\nPlayer = 2, moved = %c from x = %d, y = %d to x = %d, y = %d\n" STYLE_RESET,tmp->step_counter, tmp->current_field.fig.name, tmp->current_field.x, tmp->current_field.y, tmp->next_field.x, tmp->next_field.y);
+        }
+        tmp = tmp->prev_node;
+    }
+}
 
 void player_mode_1(field **board, int player)
 {
@@ -17,11 +78,7 @@ void player_mode_2(field **board, int player)
     int         current_y;
     int         next_x;
     int         next_y;
-    char        fig_name;
-    field       prev_next;
-    field       prev_current;
     field       *prev;
-    field       prev_opp_king;
     field       *current;
     field       *next;
     field       *opp_king;
@@ -32,8 +89,12 @@ void player_mode_2(field **board, int player)
     field       prev_rock_next;
     field       prev_king;
     field       prev_king_next;
-    field       *inter_step;
+    char        *buffer = (char *)malloc(10);
+    int         *inp;
+    int         step_counter = 1;
     const char  *command = "clear";
+    node_t  *tail = NULL;
+
     while (1)
     {
         system(command);
@@ -42,13 +103,34 @@ void player_mode_2(field **board, int player)
         else
             printf(MAGENTA "\n\n\n\nPlayer 2\n" STYLE_RESET);
         
-        printf("From x y>\n");
-        fflush(stdout);
-        scanf("%d %d", &current_x, &current_y);
-        
-        printf("To x y>\n");
-        fflush(stdout);
-        scanf("%d %d", &next_x, &next_y);
+        int i = 0;
+        while (i < 2)
+        {
+            if (i == 0)
+                printf("From x y>\n");
+            else
+                printf("To x y>\n");
+            fflush(stdout);
+            fgets(buffer, 10, stdin);
+            fflush(stdin);
+            inp = parse_inp_arr(buffer);
+            if (inp == NULL)
+            {
+                printf("invalid input");
+                print_board(board);
+                break ;
+            }
+            if (i == 0) {
+                current_x = inp[0];
+                current_y = inp[1];
+            } else {
+                next_x = inp[0];
+                next_y = inp[1];
+            }
+            i++;
+        }
+        if (i < 2)
+            continue ;
 
         if (current_x < 0 || current_x > 7 || current_y < 0 || current_y > 7 || next_x < 0 || next_x > 7 || next_y < 0 || next_y > 7)
         {
@@ -64,36 +146,27 @@ void player_mode_2(field **board, int player)
 
         if (player == current->fig.color && is_valid_move(board, current, next) && next_not_in_check(board, current, next, current_king))
         {
+            insert_at_tail(&tail, create_node(*current, *next, step_counter));
             move(current, next);
         }
-        else if (valid_castle(board, current, next) && !check(board, current_king))
+        else if (valid_castle(board, current, next))
         {
+            node_t *tmp = create_node(*current, *next, step_counter);
+            insert_at_tail(&tail, tmp);
             prev_king = *current;
             prev_king_next = *next;
             rock = get_rock(board, current, next);
             prev_rock = *rock;
             if (rock->x == 0)
-            {
                 rock_next = &board[next->y][next->x + 1];
-                inter_step = &board[current_king->y][current_king->x - 1];
-
-            }
             else
-            {
                 rock_next = &board[next->y][next->x - 1];
-                inter_step = &board[current_king->y][current_king->x + 1];
-            }
             prev_rock_next = *rock_next;
-            if (check(board, inter_step))
-            {
-                print_board(board);
-                printf("you cannot castle through check\n");
-                continue ;
-            }
             move(current, next);
             move(rock, rock_next);
             if (check(board, next))
             {
+                remove_node_at_tail(&tail, tmp);
                 reset(prev_king, prev_king_next, current, next);
                 reset(prev_rock, prev_rock_next, rock, rock_next);
                 printf("you cannot castle in check\n");
@@ -108,18 +181,20 @@ void player_mode_2(field **board, int player)
             continue ;
         }
         current = next;
-        get_queen(board, current);
+        change_fig(board, current);
         if (check(board, opp_king))
         {
             if (checkmate(board, opp_king, opp_king->fig.color))
             {
                 printf("Checkmate: Player %d won\n", player);
                 print_board(board);
+                print_nodes(tail);
                 break;
             }
             printf("CHECK\n");
         }
         player = !player;
+        step_counter++;
         print_board(board);
     }
 }

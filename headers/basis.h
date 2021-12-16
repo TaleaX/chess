@@ -33,4 +33,12 @@ typedef struct s
     figure  fig;
 }   field;
 
+typedef struct node
+{
+    int         step_counter;
+    field       current_field;
+    field       next_field; 
+    struct node *prev_node;
+}   node_t;
+
 #endif
