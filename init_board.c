@@ -84,15 +84,6 @@ void    print_board(field **board)
             }
             else
                 printf("   |");
-            /*if (row == 7)
-            {
-                if (col == 7)
-                {
-                    printf("\n");
-                    printf("\t  |");
-                }
-                printf("  %d ", col);
-            }*/
             col++;
         }
         col = 0;

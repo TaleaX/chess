@@ -1,5 +1,6 @@
 #ifndef GET_FIELDS_H
 #define GET_FIELDS_H
+#include "basis.h"
 
 field   *get_field(field **board, int x, int y);
 field   *get_opponent_king(field **board, int player_color);

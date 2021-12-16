@@ -17,6 +17,8 @@
 # define CYAN_BACKGROUND "\x1b[46m"
 # define STYLE_RESET "\x1b[0m"
 # define ABS(Value) (Value < 0 ? -Value : Value)
+#include <stdio.h>
+#include <stdlib.h>
 
 typedef struct f
 {

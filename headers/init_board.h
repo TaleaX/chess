@@ -1,5 +1,5 @@
-#ifndef INIT_GAME_H
-#define INIT_GAME_H
+#ifndef INIT_BOARD_H
+#define INIT_BOARD_H
 #include "basis.h"
 
 field   **init_board();

@@ -1,9 +1,6 @@
 #include <stdio.h>
 #include "headers/basis.h"
 #include "headers/check_way.h"
-#include "headers/end_game.h"
-
-
 
 int     check_rock(field **board, field *current, field *next)
 {
@@ -59,24 +56,11 @@ int     check_pawn(field *current, field *next)
     {
         if (next->y > current->y) //checks for backward movements
             return (0);
-        /*if (current->y - next->y > 2 && !current->fig.moved) //can move 2 fields at max if pawn is moved for first time
-            return (0);*/
-        if (current->y - next->y > 1 && current->fig.moved) //can move 1 field at max
-            return (0);
-        /*if (!next->empty && next->fig.color == WHITE) //cannot go further when there is a white figure
-            return (0);*/
-        
     }
     else
     {
         if (next->y < current->y) //checks for backward movements
             return (0);
-        /*if (next->y - current->y > 2 && !current->fig.moved) //can move 2 fields alomg y achsis at max if pawn is moved for first time
-            return (0);*/
-        if (next->y - current->y > 1 && current->fig.moved) //can move 1 field along y achsis at max
-            return (0);
-        /*if (!next->empty && next->fig.color == BLACK) //cannot go further when there is a white figure
-            return (0);*/
     }
     if (ABS((next->y - current->y)) > 1 && current->fig.moved) //can move 1 field along y achsis at max
         return (0);

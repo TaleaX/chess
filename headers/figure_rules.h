@@ -1,5 +1,5 @@
-#ifndef RULES_H
-#define RULES_H
+#ifndef FIGURE_RULES_H
+#define FIGURE_RULES_H
 #include "basis.h"
 
 int     check_rock(field **board, field *current, field *next);

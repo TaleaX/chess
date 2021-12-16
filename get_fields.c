@@ -22,26 +22,6 @@ field   *get_field(field **board, int x, int y)
     return ((void *)0);
 }
 
-/*field   *get_current_field(field **board, char fig_name, int player_color)
-{
-    int     i;
-    int     j;
-    
-    i = 0;
-    while (i < 8)
-    {
-        j = 0;
-        while (j < 8)
-        {
-            if (board[i][j].fig.name == fig_name && board[i][j].fig.color == player_color)
-                return (&board[i][j]);
-            j++;
-        }
-        i++;
-    }
-    return ((void *)0);
-}*/
-
 field   *get_opponent_king(field **board, int player_color)
 {
     int     i;

@@ -2,12 +2,14 @@
 #include <stdlib.h>
 #include <math.h>
 #include "headers/basis.h"
-#include "headers/rules.h"
-#include "headers/init_game.h"
-#include "headers/end_game.h"
+
+#include "headers/init_board.h"
+
 #include "headers/game.h"
+#include "headers/movements_list.h"
 #include "headers/get_fields.h"
-#include "headers/validate.h"
+
+#include "headers/check_moves.h"
 
 int* parse_inp_arr(char *inp)
 {
@@ -27,45 +29,7 @@ int* parse_inp_arr(char *inp)
     return (val);
 }
 
-node_t  *create_node(field current, field next, int step_counter)
-{
-    node_t  *step = (node_t *)malloc(sizeof(node_t));
-    step->current_field = current;
-    step->next_field = next;
-    step->step_counter = step_counter;
-    step->prev_node = NULL;
-    return (step);
-}
 
-void insert_at_tail(node_t **tail, node_t *node_to_insert)
-{
-    node_to_insert->prev_node = *tail;
-    *tail = node_to_insert;
-}
-
-void remove_node_at_tail(node_t **tail, node_t *node_to_remove)
-{
-    if (*tail == node_to_remove)
-    {
-        *tail = node_to_remove->prev_node;
-        free(node_to_remove);
-    }
-}
-
-void print_nodes(node_t *tail)
-{
-    node_t  *tmp = tail;
-    while (tmp != NULL)
-    {
-        if (tmp->current_field.fig.color)
-            printf(BOLD "Step: %d\nPlayer = 1, moved = %c from x = %d, y = %d to x = %d, y = %d\n" STYLE_RESET,tmp->step_counter, tmp->current_field.fig.name, tmp->current_field.x, tmp->current_field.y, tmp->next_field.x, tmp->next_field.y);
-        else
-        {
-            printf(MAGENTA "Step: %d\nPlayer = 2, moved = %c from x = %d, y = %d to x = %d, y = %d\n" STYLE_RESET,tmp->step_counter, tmp->current_field.fig.name, tmp->current_field.x, tmp->current_field.y, tmp->next_field.x, tmp->next_field.y);
-        }
-        tmp = tmp->prev_node;
-    }
-}
 
 void player_mode_1(field **board, int player)
 {
@@ -166,7 +130,7 @@ void player_mode_2(field **board, int player)
             move(rock, rock_next);
             if (check(board, next))
             {
-                remove_node_at_tail(&tail, tmp);
+                remove_last_node(&tail, tmp);
                 reset(prev_king, prev_king_next, current, next);
                 reset(prev_rock, prev_rock_next, rock, rock_next);
                 printf("you cannot castle in check\n");

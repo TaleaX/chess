@@ -1,7 +1,19 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "headers/basis.h"
-#include "headers/rules.h"
-#include "headers/init_game.h"
+
+//#include "headers/game.h"
+//#include "headers/movements_list.h"
+#include "headers/init_board.h"
+//#include "headers/get_fields.h"
+//#include "headers/check_way.h"
+
+//#include "headers/figure_rules.h"
+
+//#include "headers/check_moves.h"
+
+//#include "headers/game.h"
+
 #include "headers/player_modes.h"
 
 int main(void)
