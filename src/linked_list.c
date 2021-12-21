@@ -1,4 +1,4 @@
-#include "headers/basis.h"
+#include "../headers/basis.h"
 #include <stdio.h>
 #include <stdlib.h>
 

@@ -1,22 +1,22 @@
-/*#include "headers/basis.h"
-#include "headers/figure_rules.h"
-#include "headers/get_fields.h"
-#include "headers/check_way.h"
-#include "headers/game.h"
-#include "headers/end_game.h"
+/*#include "../headers/basis.h"
+#include "../headers/figure_rules.h"
+#include "../headers/get_fields.h"
+#include "../headers/check_way.h"
+#include "../headers/game.h"
+#include "../headers/end_game.h"
 #include <stdio.h>*/
-#include "headers/basis.h"
-#include "headers/figure_rules.h"
-#include "headers/get_fields.h"
-#include "headers/check_way.h"
-#include "headers/game.h"
+#include "../headers/basis.h"
+#include "../headers/figure_rules.h"
+#include "../headers/get_fields.h"
+#include "../headers/check_way.h"
+#include "../headers/game.h"
 
-int is_valid_move(field **board, field *current, field *next)
+int is_valid_move(field **board, field *current, field *next, int defense)
 {
     int     valid;
 
     valid = 0;
-    if(current->fig.color == next->fig.color)
+    if(!defense && current->fig.color == next->fig.color)
         return (0);
     if (current->x == next->x && current->y == next->y)
         return (0);
@@ -60,10 +60,10 @@ int check(field **board, field *king)
         j = 0;
         while (j < COL)
         {
-            if (is_valid_move(board, &board[i][j], king))
+            if (is_valid_move(board, &board[i][j], king, 0))
             {
-                printf("check valid move: x = %d, y = %d, name = %c, color = %d\n", board[i][j].x, board[i][j].y, board[i][j].fig.name, board[i][j].fig.color);
-                printf("check valid move: x = %d, y = %d, name = %c, color = %d\n", king->x, king->y, king->fig.name, king->fig.color);
+                //printf("check valid move: x = %d, y = %d, name = %c, color = %d\n", board[i][j].x, board[i][j].y, board[i][j].fig.name, board[i][j].fig.color);
+                //printf("check valid move: x = %d, y = %d, name = %c, color = %d\n", king->x, king->y, king->fig.name, king->fig.color);
                 return (1);
             }
             j++;
@@ -80,7 +80,7 @@ int valid_castle(field **board, field *king, field *next)
     field   prev_king = *king;
     field   prev_inter_step;
 
-    printf("king x = %d, king y = %d\n", king->x, king->y);
+    //printf("king x = %d, king y = %d\n", king->x, king->y);
     if (check(board, king))
         return (0);
     if (king->fig.name != 'K' || king->fig.moved == 1 || rock->fig.moved == 1)
@@ -123,6 +123,7 @@ int next_not_in_check(field **board, field *current, field *next, field *current
     temp_c = *current;
     temp_n = *next;
     move(current, next);
+    //why did I use this if statement again?
     if (next->fig.name == 'K')
     {
         if (check(board, next))
@@ -140,7 +141,7 @@ int next_not_in_check(field **board, field *current, field *next, field *current
     return (1);
 }
 
-int checkmate(field **board, field *king, int player_color)
+int checkmate(field **board, field *king)
 {
     int     i;
     int     j;
@@ -159,7 +160,7 @@ int checkmate(field **board, field *king, int player_color)
     max_possible_pos = 0;
     check_ = 0;
     m = 0;
-    players_figs = get_players_figs(board, player_color);
+    players_figs = get_players_figs(board, king->fig.color);
     while (*players_figs)
     {
         counter++;
@@ -169,9 +170,9 @@ int checkmate(field **board, field *king, int player_color)
             j = 0;
             while (j < COL)
             {
-                if (is_valid_move(board, *players_figs, &board[i][j]) && next_not_in_check(board, *players_figs, &board[i][j], king))
+                if (is_valid_move(board, *players_figs, &board[i][j], 0) && next_not_in_check(board, *players_figs, &board[i][j], king))
                 {
-                    printf("%c can be moved from %d %d to %d %d %c\n", (*players_figs)->fig.name, (*players_figs)->x, (*players_figs)->y, board[i][j].x, board[i][j].y, board[i][j].fig.name);
+                    //printf("%c can be moved from %d %d to %d %d %c\n", (*players_figs)->fig.name, (*players_figs)->x, (*players_figs)->y, board[i][j].x, board[i][j].y, board[i][j].fig.name);
                     free(players_figs);
                     return (0);
                 }

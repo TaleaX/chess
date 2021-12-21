@@ -1,5 +1,5 @@
-#ifndef MOVEMENTS_LIST_H
-#define MOVEMENTS_LIST_H
+#ifndef LINKED_LIST_H
+#define LINKED_LIST_H
 #include "basis.h"
 
 node_t  *create_node(field current, field next, int step_counter);

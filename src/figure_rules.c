@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include "headers/basis.h"
-#include "headers/check_way.h"
+#include "../headers/basis.h"
+#include "../headers/check_way.h"
 
 int     check_rock(field **board, field *current, field *next)
 {
