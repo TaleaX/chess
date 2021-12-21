@@ -84,9 +84,9 @@ void    print_board(field **board)
                     if (board[row][col].fig.color == 1)
                     {
                         if (col % 2 == 0)
-                            printf(BOLD YELLOW WHITE_BACKGROUND " %c " STYLE_RESET, board[row][col].fig.name);
+                            printf(BOLD BLUE WHITE_BACKGROUND " %c " STYLE_RESET, board[row][col].fig.name);
                         else
-                            printf(BOLD YELLOW " %c " STYLE_RESET, board[row][col].fig.name);
+                            printf(BOLD BLUE " %c " STYLE_RESET, board[row][col].fig.name);
                     }
                     else if (board[row][col].fig.color == 0)
                     {
@@ -113,9 +113,9 @@ void    print_board(field **board)
                     if (board[row][col].fig.color == 1)
                     {
                         if (col % 2 != 0)
-                            printf(BOLD YELLOW WHITE_BACKGROUND " %c " STYLE_RESET, board[row][col].fig.name);
+                            printf(BOLD BLUE WHITE_BACKGROUND " %c " STYLE_RESET, board[row][col].fig.name);
                         else
-                            printf(BOLD YELLOW " %c " STYLE_RESET, board[row][col].fig.name);
+                            printf(BOLD BLUE " %c " STYLE_RESET, board[row][col].fig.name);
                     }
                     else if (board[row][col].fig.color == 0)
                     {

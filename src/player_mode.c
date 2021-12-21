@@ -64,7 +64,7 @@ void player_mode_2(field **board, int player)
     {
         system(command);
         if (player)
-            printf(BOLD YELLOW "\n\n\n\nPlayer 1\n" STYLE_RESET);
+            printf(BOLD "\n\n\n\nPlayer 1\n" STYLE_RESET);
         else
             printf(BOLD MAGENTA "\n\n\n\nPlayer 2\n" STYLE_RESET);
         
