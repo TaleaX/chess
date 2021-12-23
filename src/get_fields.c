@@ -42,13 +42,6 @@ field   *get_king(field **board, int player_color)
     return ((void *)0);
 }
 
-field   *get_rock(field **board, field *king, field *next)
-{
-    if (king->x < next->x)
-        return (&board[king->y][7]);
-    return (&board[king->y][0]);
-}
-
 field   **get_players_figs(field **board, int player_color)
 {
     field   **figs;

@@ -1,10 +1,4 @@
-/*#include "../headers/basis.h"
-#include "../headers/figure_rules.h"
-#include "../headers/get_fields.h"
-#include "../headers/check_way.h"
-#include "../headers/game.h"
-#include "../headers/end_game.h"
-#include <stdio.h>*/
+#include <stdio.h>
 #include "../headers/basis.h"
 #include "../headers/figure_rules.h"
 #include "../headers/get_fields.h"
@@ -75,12 +69,11 @@ int check(field **board, field *king)
 
 int valid_castle(field **board, field *king, field *next)
 {
-    field   *rock = get_rock(board, king, next);
+    field   *rock = (king->x < next->x) ? &board[king->y][7] : &board[king->y][0];
     field   *inter_step = &board[king->y][next->x - 1];
     field   prev_king = *king;
     field   prev_inter_step;
 
-    //printf("king x = %d, king y = %d\n", king->x, king->y);
     if (check(board, king))
         return (0);
     if (king->fig.name != 'K' || king->fig.moved == 1 || rock->fig.moved == 1)

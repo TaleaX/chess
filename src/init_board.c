@@ -84,16 +84,16 @@ void    print_board(field **board)
                     if (board[row][col].fig.color == 1)
                     {
                         if (col % 2 == 0)
-                            printf(BOLD BLUE WHITE_BACKGROUND " %c " STYLE_RESET, board[row][col].fig.name);
+                            printf(BLUE WHITE_BACKGROUND " %c " STYLE_RESET, board[row][col].fig.name);
                         else
-                            printf(BOLD BLUE " %c " STYLE_RESET, board[row][col].fig.name);
+                            printf(BLUE " %c " STYLE_RESET, board[row][col].fig.name);
                     }
                     else if (board[row][col].fig.color == 0)
                     {
                         if (col % 2 == 0)
-                            printf(BOLD MAGENTA WHITE_BACKGROUND " %c " STYLE_RESET, board[row][col].fig.name);
+                            printf(MAGENTA WHITE_BACKGROUND " %c " STYLE_RESET, board[row][col].fig.name);
                         else
-                            printf(BOLD MAGENTA " %c " STYLE_RESET, board[row][col].fig.name);
+                            printf(MAGENTA " %c " STYLE_RESET, board[row][col].fig.name);
                     }
                     printf("|");
                 }
@@ -113,16 +113,16 @@ void    print_board(field **board)
                     if (board[row][col].fig.color == 1)
                     {
                         if (col % 2 != 0)
-                            printf(BOLD BLUE WHITE_BACKGROUND " %c " STYLE_RESET, board[row][col].fig.name);
+                            printf(BLUE WHITE_BACKGROUND " %c " STYLE_RESET, board[row][col].fig.name);
                         else
-                            printf(BOLD BLUE " %c " STYLE_RESET, board[row][col].fig.name);
+                            printf(BLUE " %c " STYLE_RESET, board[row][col].fig.name);
                     }
                     else if (board[row][col].fig.color == 0)
                     {
                         if (col % 2 != 0)
-                            printf(BOLD MAGENTA WHITE_BACKGROUND " %c " STYLE_RESET, board[row][col].fig.name);
+                            printf(MAGENTA WHITE_BACKGROUND " %c " STYLE_RESET, board[row][col].fig.name);
                         else
-                            printf(BOLD MAGENTA " %c " STYLE_RESET, board[row][col].fig.name);
+                            printf(MAGENTA " %c " STYLE_RESET, board[row][col].fig.name);
                     }
                     printf("|");
                 }
