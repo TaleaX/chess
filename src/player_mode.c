@@ -59,7 +59,6 @@ void player_mode_2(field **board, int player)
     play = 1;
     while (1)
     {
-        system(command);
         if (player)
             printf(BOLD "\n\n\n\nPlayer 1\n" STYLE_RESET);
         else
@@ -169,6 +168,7 @@ void player_mode_2(field **board, int player)
         }
         player = !player;
         step_counter++;
+        system(command);
         print_board(board);
     }
     free(buffer);
