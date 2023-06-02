@@ -1,1 +1,1 @@
-# Christmas Present Chess Game
+# Chess Game for the terminal
